@@ -13,7 +13,6 @@ EVENTS = {
     "Disfruta": "https://www.dinaticket.com/es/provider/10402/event/4905281",
     "Miedo": "https://www.dinaticket.com/es/provider/10402/event/4915778",
     "Escondido": "https://www.dinaticket.com/es/provider/20073/event/4930233",
-    
 }
 
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X) "
@@ -148,12 +147,15 @@ def fetch_functions_dinaticket(url: str, timeout: int = 20) -> list[dict]:
     funciones = []
     for session in soup.find_all("div", class_="js-session-row"):
         parent = session.find_parent("div", class_="js-session-group")
-        if not parent: continue
+        if not parent:
+            continue
         date_div = parent.find("div", class_="session-card__date")
-        if not date_div: continue
+        if not date_div:
+            continue
         dia = date_div.find("span", class_="num_dia")
         mes = date_div.find("span", class_="mes")
-        if not (dia and mes): continue
+        if not (dia and mes):
+            continue
         mes_num = MESES.get(mes.text.strip(), "01")
         anio = datetime.now().year
         fecha_iso = f"{anio}-{mes_num}-{dia.text.strip().zfill(2)}"
@@ -169,7 +171,8 @@ def fetch_functions_dinaticket(url: str, timeout: int = 20) -> list[dict]:
         else:
             hora = hora_txt.strip()
         quota_row = session.find("div", class_="js-quota-row")
-        if not quota_row: continue
+        if not quota_row:
+            continue
         try:
             capacidad = int(quota_row.get("data-quota-total", 0))
             stock = int(quota_row.get("data-stock", 0))
@@ -205,13 +208,14 @@ def build_tabbed_payload(eventos_dt: dict[str, list[dict]]) -> dict:
     }
 
 def write_tabs_html(payload: dict, out_html: str = "dashboard_tabs.html") -> None:
-    html = TABS_HTML.replace("{{PAYLOAD_JSON}}",
-        json.dumps(payload, ensure_ascii=False).replace("</script>", "<\\/script>"))
+    html = TABS_HTML.replace(
+        "{{PAYLOAD_JSON}}",
+        json.dumps(payload, ensure_ascii=False).replace("</script>", "<\\/script>")
+    )
     Path(out_html).write_text(html, encoding="utf-8")
     print(f"OK ✓ Escribí {out_html} (abrilo en tu navegador).")
 
 # ============================== MAIN ============================== #
-# al final de tu script
 if __name__ == "__main__":
     eventos_dt: dict[str, list[dict]] = {}
     for nombre, url in EVENTS.items():
@@ -221,10 +225,6 @@ if __name__ == "__main__":
 
     payload = build_tabbed_payload(eventos_dt)
 
-    # >>> escribe dentro de docs/
+    # Genera el sitio en docs/index.html (para GitHub Pages)
     Path("docs").mkdir(exist_ok=True)
-    from pathlib import Path
-Path("docs").mkdir(exist_ok=True)
-write_tabs_html(payload, out_html="docs/index.html")
-
-
+    write_tabs_html(payload, out_html="docs/index.html")
