@@ -1,0 +1,43 @@
+name: build-site
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # cada 30 minutos (UTC)
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run script
+        run: |
+          python generate_dashboard_dinaticket.py
+
+      - name: Commit and push if changed
+        run: |
+          if [ -n "$(git status --porcelain docs/index.html)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/index.html
+            git commit -m "update dashboard $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            git push
+          else
+            echo "No changes to commit."
+          fi
