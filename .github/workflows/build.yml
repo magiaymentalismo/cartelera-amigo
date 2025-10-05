@@ -2,27 +2,28 @@ name: build-site
 
 on:
   schedule:
-    # Run every 30 minutes (at :00 and :30)
-    - cron: "0,30 * * * *"
+    - cron: "0,30 * * * *"         # triggers every :00 and :30 (UTC)
   workflow_dispatch:
     inputs:
       force:
-        description: "Force run (ignore the :00/:30 gate)"
+        description: "Force run (ignore :00/:30 gate, run now)"
         type: boolean
         default: false
+
+permissions:
+  contents: write                   # needed to push commits
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Madrid
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
+      # Gate: only continue at :00 / :30 Madrid, unless "force" is true
       - name: Check Madrid minute gate
         id: gate
         run: |
@@ -42,15 +43,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
-      - name: Generate dashboard
-        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
-        run: python generate_dashboard_dinaticket.py
-
-      - name: Commit and push changes
+      - name: Generate dashboard (docs/index.html)
         if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
         run: |
-          git config user.name "github-actions[bot]"
+          set -e
+          python generate_dashboard_dinaticket.py
+          test -f docs/index.html
+
+      - name: Commit & push if docs changed
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
+        run: |
+          git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html
-          git commit -m "Auto-update dashboard ($(TZ=Europe/Madrid date '+%Y-%m-%d %H:%M'))" || echo "No changes"
-          git push || echo "Nothing to push"
+          # force-add in case docs/index.html is listed in .gitignore
+          git add -f docs/index.html
+          if git diff --cached --quiet; then
+            echo "🔹 No changes in docs/index.html (no commit)."
+          else
+            git commit -m "Auto-update dashboard ($(TZ=Europe/Madrid date '+%Y-%m-%d %H:%M'))"
+            git push origin main
+          fi
