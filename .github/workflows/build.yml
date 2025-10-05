@@ -30,24 +30,27 @@ jobs:
           echo "mm=$MM" >> $GITHUB_OUTPUT
           echo "⏱️ Minuto Madrid = $MM"
 
-      - name: Stop unless it's :00 or :30 (or forced)
-        if: ${{ steps.gate.outputs.mm != '00' && steps.gate.outputs.mm != '30' && github.event.inputs.force != 'true' }}
-        run: |
-          echo "⏹️ Not time to run (minute != 00 or 30 and not forced)"
-          exit 0
+      - name: Setup Python
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Install dependencies
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
         run: |
-          python3 -m pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
       - name: Generate dashboard
-        run: python3 generate_dashboard_dinaticket.py
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
+        run: python generate_dashboard_dinaticket.py
 
       - name: Commit and push changes
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' || github.event.inputs.force == 'true' }}
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html || true
-          git commit -m "Auto-update dashboard ($(TZ=Europe/Madrid date))" || echo "No changes"
-          git push origin main || echo "Nothing to push"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          git commit -m "Auto-update dashboard ($(TZ=Europe/Madrid date '+%Y-%m-%d %H:%M'))" || echo "No changes"
+          git push || echo "Nothing to push"
