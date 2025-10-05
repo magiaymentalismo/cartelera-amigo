@@ -10,81 +10,101 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="color-scheme" content="dark">
 <title>Cartelera — Magia & Teatro</title>
-<!-- (opcional) añade tu icono: coloca un PNG en docs/icons/apple-touch-icon.png -->
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <style>
   :root{
-    --bg:#0b0b0b; --panel:#141414; --card:#181818; --ink:#f5f5f5; --muted:#b7b7b7;
-    --hair:#2a2a2a; --cta:#d4af37; --ok:#16a34a;
+    --bg:#0b0b0b; --bg2:#0e0e0e; --panel:#121212; --card:#181818;
+    --ink:#f7f7f7; --muted:#b9b9b9; --hair:#2a2a2a;
+    --cta:#d4af37; --ok:#16a34a; --warn:#f59e0b; --sold:#7a7a7a;
+    --r:.875rem; --rx:999px; --inside:.9rem; --shadow:0 10px 30px rgb(0 0 0 / .35);
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#fafafa; --bg2:#fff; --panel:#ffffff; --card:#ffffff; --ink:#0a0a0a; --muted:#555; --hair:#e8e8e8 }
+    body{ background:linear-gradient(180deg,#fff 0%,#fafafa 100%) }
   }
   html,body{height:100%}
   body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font:400 clamp(15px, 1.6vw, 16px)/1.45 "SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+    margin:0; color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 50% -200px, #1a1a1a80 0%, transparent 70%),
+      linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    font:500 clamp(15px, 1.6vw, 16px)/1.5 "SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     -webkit-text-size-adjust:100%;
-    min-height:100dvh; /* iOS viewport dinámico */
-    padding-bottom: env(safe-area-inset-bottom);
-    color-scheme: dark;
-    overflow-y: overlay;
+    min-height:100dvh; padding-bottom: env(safe-area-inset-bottom);
+    color-scheme: dark light; overflow-y: overlay; -webkit-tap-highlight-color: transparent;
   }
   header{
-    position:sticky; top:0; z-index:10;
-    background:rgba(15,15,15,.9); border-bottom:1px solid var(--hair);
-    backdrop-filter:saturate(180%) blur(12px); -webkit-backdrop-filter:saturate(180%) blur(12px);
-    padding-top: max(.25rem, env(safe-area-inset-top));
+    position:sticky; top:0; z-index:10; padding-top:max(.25rem, env(safe-area-inset-top));
+    background: color-mix(in oklab, #0f0f0f 80%, transparent);
+    border-bottom:1px solid var(--hair);
+    backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px);
   }
-  .wrap{max-width:1040px; margin:0 auto; padding:1rem}
-  h1{margin:0 0 .4rem; font:800 clamp(18px, 3.6vw, 22px)/1.1 inherit}
-  .meta{color:var(--muted); font-size:.9rem}
+  .wrap{max-width:1040px; margin:0 auto; padding: clamp(.75rem, 1.8vw, 1rem)}
+  h1{margin:0 0 .3rem; font:800 clamp(18px, 3.4vw, 24px)/1.1 "SF Pro Display", system-ui, sans-serif; letter-spacing:.2px}
+  .meta{color:var(--muted); font-size:.92rem}
+
   .tabs{
-    display:flex; gap:.6rem; margin-top:.8rem; overflow-x:auto; padding-bottom:.25rem;
+    display:flex; gap:.6rem; margin-top:.7rem; overflow-x:auto; padding:.2rem 0 .4rem;
     -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity;
   }
   .tabs::-webkit-scrollbar{display:none}
   .tab{
-    scroll-snap-align:start;
-    padding:.62rem 1.05rem; border-radius:999px; cursor:pointer;
-    background:#1b1b1b; color:var(--ink); border:1px solid var(--hair);
-    font:700 .95rem/1 inherit; min-height:44px; /* target táctil iOS */
-    touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+    scroll-snap-align:start; padding:.68rem 1.1rem; border-radius: var(--rx);
+    border:1px solid var(--hair); background: linear-gradient(180deg,#1b1b1b,#161616);
+    color:var(--ink); font:700 .97rem/1 inherit; min-height:44px; letter-spacing:.2px;
+    transform: translateZ(0); transition: transform .08s ease, background .2s, border-color .2s;
+    touch-action: manipulation;
   }
-  .tab:focus-visible{outline:2px solid var(--cta); outline-offset:2px}
-  .tab.active{ background:var(--cta); color:#111 }
-  .panel{
-    background:var(--panel); border:1px solid var(--hair);
-    border-radius:.875rem; padding:1rem; margin:0 1rem;
+  .tab:active{ transform: scale(.98) }
+  .tab:focus-visible{ outline:2px solid var(--cta); outline-offset:2px }
+  .tab.active{
+    background: radial-gradient(120% 200% at 50% -60%, #ffe9a6 0%, #d4af37 55%, #b88a1c 100%);
+    color:#161616; border-color: #a07f1a; box-shadow: 0 2px 14px #d4af3740 inset;
   }
-  .list{ display:flex; flex-direction:column; gap:.8rem }
-  .item{
-    display:flex; justify-content:space-between; align-items:center;
-    background:var(--card); border:1px solid var(--hair); border-radius:.875rem;
-    padding:1rem; box-shadow:0 6px 18px rgba(0,0,0,.35);
-  }
-  .left{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap }
-  .date{
-    font:800 1rem/1.1 inherit; border-radius:.75rem; padding:.5rem .8rem;
-    border:1px solid #3a3a3a; background:#1f1f1f;
-  }
-  .time{
-    font:700 .95rem/1 inherit; border-radius:999px; padding:.45rem .8rem;
-    border:1px solid #3a3a3a; background:#2a2a2a;
-  }
-  .chip{ padding:.5rem .8rem; border-radius:999px; font:800 .92rem/1 inherit;}
-  .chip.gray{ background:#555; color:#fff }
-  .chip.green{ background:var(--ok); color:#fff }
-  .chip.gold{ background:var(--cta); color:#111 }
 
-  /* Móvil: apilar tarjeta, mayor legibilidad y margen seguro */
+  .panel{
+    background: linear-gradient(180deg, color-mix(in oklab,var(--panel) 85%, transparent), var(--panel));
+    border:1px solid var(--hair); border-radius: var(--r); padding: calc(var(--inside) + .1rem);
+    margin: 0 clamp(.5rem, 2vw, 1rem); box-shadow: var(--shadow);
+  }
+  .list{ display:flex; flex-direction:column; gap:.85rem }
+
+  .item{
+    display:flex; justify-content:space-between; align-items:center; gap:.9rem;
+    background: linear-gradient(180deg, var(--card), color-mix(in oklab, var(--card) 90%, #000 10%));
+    border:1px solid var(--hair); border-radius: var(--r); padding: .95rem; box-shadow: var(--shadow);
+  }
+  .item:active{ transform: translateY(1px) }
+
+  .left{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap }
+  .date{ font:800 1rem/1.1 inherit; border-radius:.75rem; padding:.55rem .85rem; border:1px solid #333a; background: #202020 }
+  .time{ font:700 .96rem/1 inherit; border-radius: var(--rx); padding:.5rem .85rem; border:1px solid #3a3a3a; background: #2a2a2a }
+
+  .chip{ padding:.52rem .86rem; border-radius: var(--rx); font:800 .93rem/1 inherit; letter-spacing:.2px; border:1px solid transparent }
+  .chip.gray{ background: linear-gradient(180deg,#6b6b6b,#585858); color:#fff; border-color:#4d4d4d }
+  .chip.green{ background: linear-gradient(180deg, #22c55e, #16a34a); color:#fff; border-color:#128a3d; box-shadow: 0 0 0 1px #0003 inset }
+  .chip.gold{ background: radial-gradient(100% 100% at 30% 0%, #fff2b3 0%, #f2cc5c 40%, #d4af37 100%); color:#111; border-color:#a07f1a; box-shadow: 0 0 0 1px #0002 inset }
+  .chip.warn{ background: linear-gradient(180deg,#fbcf7e,#f59e0b); color:#111; border-color:#b47207 }
+  .chip.sold{ background: linear-gradient(180deg,#8b8b8b,#6b6b6b); color:#1a1a1a; border-color:#555; text-decoration: line-through; text-decoration-thickness:2px }
+
+  .meter{ width:100%; height:8px; border-radius:6px; background:#2a2a2a; border:1px solid #3a3a3a; overflow:hidden; margin-top:.35rem }
+  .fill{ height:100%; width:0%; background: linear-gradient(90deg, #22c55e, #f59e0b 60%, #d4af37); transition: width .35s ease }
+
+  .meta2{ color:var(--muted); font:600 .86rem/1.2 system-ui; margin-top:.25rem }
+
+  .month{
+    position: sticky; top: calc(56px + env(safe-area-inset-top));
+    margin: 1rem 0 .5rem; padding:.35rem 0;
+    color: var(--cta); background: linear-gradient(180deg, transparent 0%, color-mix(in oklab,var(--panel) 45%, transparent) 100%);
+    backdrop-filter: blur(2px); font: 800 .95rem/1.2 inherit; letter-spacing:.4px; z-index: 1;
+  }
   @media (max-width: 520px){
-    .wrap{padding: .75rem}
-    .panel{margin:0; padding:.8rem}
+    .panel{margin: 0; padding: .8rem}
     .item{flex-direction:column; align-items:stretch; gap:.75rem}
     .left{justify-content:space-between}
     .chip{align-self:flex-end}
   }
-
-  /* Respeta accesibilidad: menos movimiento si el usuario lo prefiere */
   @media (prefers-reduced-motion: reduce){
     *{scroll-behavior:auto; transition:none !important; animation:none !important}
   }
@@ -103,13 +123,13 @@
       <div id="list" class="list"></div>
     </section>
   </main>
-<script id="PAYLOAD" type="application/json">{"generated_at": "2025-10-05T12:49:58.969379+02:00", "meta": {"source": "Dinaticket", "note": "Pestañas por evento"}, "eventos": {"Disfruta": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO"], "rows": [["08 Oct 2025", "20:00 h", 0, "2025-10-08"], ["15 Oct 2025", "20:00 h", 0, "2025-10-15"], ["22 Oct 2025", "20:00 h", 0, "2025-10-22"], ["05 Nov 2025", "20:00 h", 0, "2025-11-05"], ["12 Nov 2025", "20:00 h", 0, "2025-11-12"], ["19 Nov 2025", "20:00 h", 0, "2025-11-19"], ["26 Nov 2025", "20:00 h", 0, "2025-11-26"]]}}, "Miedo": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO"], "rows": [["10 Oct 2025", "23:00 h", 11, "2025-10-10"], ["17 Oct 2025", "23:00 h", 6, "2025-10-17"], ["07 Nov 2025", "23:00 h", 0, "2025-11-07"], ["14 Nov 2025", "23:00 h", 0, "2025-11-14"], ["21 Nov 2025", "23:00 h", 0, "2025-11-21"]]}}, "Escondido": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO"], "rows": [["05 Oct 2025", "18:30 h", 4, "2025-10-05"], ["11 Oct 2025", "20:00 h", 10, "2025-10-11"], ["12 Oct 2025", "18:30 h", 0, "2025-10-12"], ["19 Oct 2025", "18:30 h", 0, "2025-10-19"], ["16 Nov 2025", "18:30 h", 0, "2025-11-16"], ["23 Nov 2025", "18:30 h", 0, "2025-11-23"], ["12 Dec 2025", "20:00 h", 0, "2025-12-12"], ["14 Dec 2025", "18:30 h", 0, "2025-12-14"], ["21 Dec 2025", "18:30 h", 0, "2025-12-21"], ["28 Dec 2025", "18:30 h", 0, "2025-12-28"]]}}}}</script>
+<script id="PAYLOAD" type="application/json">{"generated_at": "2025-10-05T13:01:52.563063+02:00", "meta": {"source": "Dinaticket", "note": "Pestañas por evento; Escondido muestra capacidad/stock y ocupación"}, "eventos": {"Disfruta": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["08 Oct 2025", "20:00 h", 0, "2025-10-08", 48, 48], ["15 Oct 2025", "20:00 h", 0, "2025-10-15", 48, 48], ["22 Oct 2025", "20:00 h", 0, "2025-10-22", 48, 48], ["05 Nov 2025", "20:00 h", 0, "2025-11-05", 48, 48], ["12 Nov 2025", "20:00 h", 0, "2025-11-12", 48, 48], ["19 Nov 2025", "20:00 h", 0, "2025-11-19", 48, 48], ["26 Nov 2025", "20:00 h", 0, "2025-11-26", 48, 48]]}}, "Miedo": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["10 Oct 2025", "23:00 h", 11, "2025-10-10", 48, 37], ["17 Oct 2025", "23:00 h", 6, "2025-10-17", 48, 42], ["07 Nov 2025", "23:00 h", 0, "2025-11-07", 48, 48], ["14 Nov 2025", "23:00 h", 0, "2025-11-14", 48, 48], ["21 Nov 2025", "23:00 h", 0, "2025-11-21", 48, 48]]}}, "Escondido": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["05 Oct 2025", "18:30 h", 4, "2025-10-05", 25, 21], ["11 Oct 2025", "20:00 h", 10, "2025-10-11", 60, 50], ["12 Oct 2025", "18:30 h", 0, "2025-10-12", 35, 35], ["19 Oct 2025", "18:30 h", 0, "2025-10-19", 35, 35], ["16 Nov 2025", "18:30 h", 0, "2025-11-16", 35, 35], ["23 Nov 2025", "18:30 h", 0, "2025-11-23", 35, 35], ["12 Dec 2025", "20:00 h", 0, "2025-12-12", 60, 60], ["14 Dec 2025", "18:30 h", 0, "2025-12-14", 60, 60], ["21 Dec 2025", "18:30 h", 0, "2025-12-21", 35, 35], ["28 Dec 2025", "18:30 h", 0, "2025-12-28", 35, 35]]}}}}</script>
 <script>
 const payload = JSON.parse(document.getElementById('PAYLOAD').textContent);
 const eventos = payload.eventos || {};
 const gen = new Date(payload.generated_at);
 
-// Muestra fecha y además "hace X min" (queda pro en móvil)
+// “hace X min”
 const diffMin = Math.max(0, Math.round((Date.now() - gen.getTime())/60000));
 const ago = diffMin===0 ? "justo ahora" : diffMin===1 ? "hace 1 min" : `hace ${diffMin} min`;
 document.getElementById('meta').textContent =
@@ -125,19 +145,23 @@ if(active){
   });
   document.body.className=active;
 }
+
 function setActive(k){ active=k; document.body.className=k;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===k));
   render();
 }
 function parseRow(r){
-  return {fecha_label:r[0],hora:r[1],vendidas:r[2],fecha_iso:r[3]};
+  // [FechaLabel, Hora, Vendidas, FechaISO, Capacidad, Stock]
+  return {fecha_label:r[0],hora:r[1],vendidas:r[2],fecha_iso:r[3],cap:r[4]??null,stock:r[5]??null};
 }
 const DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 function dayName(f){ return DAYS[new Date(f+'T00:00:00').getDay()]; }
+
 function render(){
   if(!active) return;
   let data=(eventos[active].table?.rows||[]).map(parseRow);
   data.sort((a,b)=> (a.fecha_iso+a.hora).localeCompare(b.fecha_iso+b.hora));
+
   const list=document.getElementById('list'); list.innerHTML='';
   let currentMonth = "";
   data.forEach(x=>{
@@ -146,19 +170,47 @@ function render(){
     const monthLabel = d.toLocaleDateString('es-ES',{month:'long', year:'numeric'});
     if(monthKey !== currentMonth){
       currentMonth = monthKey;
-      list.insertAdjacentHTML('beforeend', `<h3 style="margin:1rem 0 .5rem; color:var(--cta)">${monthLabel}</h3>`);
+      list.insertAdjacentHTML('beforeend', `<h3 class="month">${monthLabel}</h3>`);
     }
+
     const fechaLabel=`${x.fecha_label} (${dayName(x.fecha_iso)})`;
+    // Lógica de chips por defecto
     let totalClass="chip gray";
     if(x.vendidas>=1 && x.vendidas<=9) totalClass="chip green";
     if(x.vendidas>=10) totalClass="chip gold";
+
+    // Si es la pestaña "Escondido", mostrar capacidad/stock + barra
+    const isEscondido = (active === "Escondido");
+    let rightHTML = `<span class="${totalClass}">Vendidas: <b>${x.vendidas}</b></span>`;
+
+    if(isEscondido && x.cap){
+      const cap = Number(x.cap)||0;
+      const stock = (x.stock==null)? null : Number(x.stock);
+      const vendidas = Number(x.vendidas)||0;
+      const pct = cap>0 ? Math.round((vendidas/cap)*100) : 0;
+
+      // Elegir chip según estado
+      let chipClass = "chip green";
+      if(stock===0) chipClass = "chip sold";
+      else if(pct>=70) chipClass = "chip gold";
+      else if(pct>=40) chipClass = "chip warn";
+
+      const stockTxt = (stock==null) ? "" : ` — quedan ${stock}`;
+      rightHTML = `
+        <div style="min-width:220px; text-align:right">
+          <span class="${chipClass}">Vendidas: <b>${vendidas}</b> / ${cap}${stockTxt}</span>
+          <div class="meter" aria-hidden="true"><div class="fill" style="width:${Math.min(100, Math.max(0, pct))}%"></div></div>
+          <div class="meta2">${pct}% de ocupación</div>
+        </div>`;
+    }
+
     list.insertAdjacentHTML('beforeend',`
       <div class="item">
         <div class="left">
           <div class="date">${fechaLabel}</div>
           <div class="time">${x.hora}</div>
         </div>
-        <span class="${totalClass}">Vendidas: <b>${x.vendidas}</b></span>
+        ${rightHTML}
       </div>`);
   });
 }
