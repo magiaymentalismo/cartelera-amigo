@@ -2,43 +2,66 @@ name: build-site
 
 on:
   schedule:
-    - cron: '0,30 * * * *'  # cada 00 y 30 min de cada hora
-  workflow_dispatch:         # permite ejecutarlo manualmente
-
+    - cron: "*/10 * * * *"   # corre cada 10 min en UTC (barato y fiable)
+  workflow_dispatch: {}
   push:
     branches: [main]
+    paths:
+      - "generate_*.py"
+      - "requirements.txt"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: write    # para commitear docs/index.html
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    env:
+      TZ: Europe/Madrid
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Solo seguir si en Madrid es :00 o :30
+        id: gate
+        run: |
+          MM=$(TZ=Europe/Madrid date +%M)
+          echo "mm=$MM" >> $GITHUB_OUTPUT
+
+      - name: Mostrar minuto local
+        run: echo "Minuto Madrid = ${{ steps.gate.outputs.mm }}"
+
+      # A partir de aquí solo corre si es 00 o 30
       - name: Set up Python
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Instalar dependencias
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests beautifulsoup4
 
-      - name: Run script
+      - name: Generar dashboard (docs/index.html)
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' }}
         run: |
           python generate_dashboard_dinaticket.py
+          test -f docs/index.html
 
-      - name: Commit and push if changed
+      - name: Commit & push solo si hubo cambios
+        if: ${{ steps.gate.outputs.mm == '00' || steps.gate.outputs.mm == '30' }}
         run: |
-          if [ -n "$(git status --porcelain docs/index.html)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add docs/index.html
-            git commit -m "update dashboard $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-            git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          if git diff --cached --quiet; then
+            echo "Sin cambios que commitear."
           else
-            echo "No changes to commit."
+            git commit -m "build: actualizar docs/index.html ($(TZ=Europe/Madrid date '+%Y-%m-%d %H:%M'))"
+            git push
           fi
