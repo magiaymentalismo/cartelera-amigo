@@ -5,110 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f1115">
+<meta name="theme-color" content="#000000">
 <meta name="format-detection" content="telephone=no">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark">
 <title>Cartelera — Magia & Teatro</title>
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <style>
   :root{
-    /* Paleta accesible (alto contraste) */
-    --bg:#0f1115;        /* fondo */
-    --panel:#151922;     /* panel */
-    --card:#1a1f2b;      /* tarjetas */
-    --ink:#e9eef3;       /* texto principal */
-    --muted:#aeb6c2;     /* texto secundario */
-    --hair:#242a34;      /* bordes */
-    --accent:#3b82f6;    /* azul accesible */
-    --good:#16a34a;      /* verde accesible */
-    --warn:#f59e0b;      /* ámbar accesible */
-    --sold:#6b7280;      /* gris “sold out” */
+    /* Paleta teatral */
+    --bg:#000;          /* negro puro OLED */
+    --bg2:#090909;      /* negro suave */
+    --panel:#0d0d0d;    /* panel */
+    --card:#121212;     /* tarjetas */
+    --ink:#f7f7f7;      /* texto principal */
+    --muted:#b9b9b9;    /* texto secundario */
+    --hair:#272727;     /* bordes sutiles */
+    --gold:#d4af37;     /* dorado acento */
+    --green:#22c55e;    /* verde claro */
+    --orange:#f59e0b;   /* ámbar */
+    --sold:#6b7280;     /* gris sold-out */
 
-    --r:.9rem;           /* radio tarjetas */
-    --rx:999px;          /* radio pills */
+    --r:.9rem;          /* radio tarjetas */
+    --rx:999px;         /* radio pills */
     --pad:1rem;
-    --shadow:0 10px 28px rgba(0,0,0,.35);
-  }
-  @media (prefers-color-scheme: light){
-    :root{
-      --bg:#f7f8fa; --panel:#ffffff; --card:#ffffff; --ink:#0b0e12; --muted:#586174; --hair:#e7eaf0;
-      --accent:#2563eb;
-    }
   }
 
   html,body{height:100%}
   body{
     margin:0; color:var(--ink);
-    background: linear-gradient(180deg, var(--bg) 0%, #0c0f13 100%);
-    font:600 clamp(16px, 1.9vw, 17px)/1.55 "SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 50% -250px, rgba(212,175,55,.16) 0%, transparent 65%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    font:600 clamp(16px, 1.9vw, 17px)/1.55 -apple-system, system-ui, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     -webkit-text-size-adjust:100%;
     min-height:100dvh; padding-bottom: env(safe-area-inset-bottom);
     overflow-y: overlay; -webkit-tap-highlight-color: transparent;
   }
 
+  /* Cabecera con “proscenio” */
   header{
     position:sticky; top:0; z-index:10; padding-top:max(.25rem, env(safe-area-inset-top));
-    background:rgba(11,13,17,.7);
+    background:
+      radial-gradient(1200px 500px at 50% -200px, rgba(212,175,55,.10) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(0,0,0,.85), rgba(0,0,0,.65));
     border-bottom:1px solid var(--hair);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   }
 
-  .wrap{max-width:1040px; margin:0 auto; padding: clamp(.8rem, 2vw, 1rem)}
-  h1{margin:0 0 .35rem; font:800 clamp(18px, 3.2vw, 24px)/1.1 "SF Pro Display",system-ui,sans-serif; letter-spacing:.2px}
+  .wrap{max-width:1040px; margin:0 auto; padding: clamp(.85rem, 2vw, 1rem)}
+  h1{margin:0 0 .35rem; font:900 clamp(19px, 3.2vw, 26px)/1.15 "SF Pro Display", system-ui, sans-serif; letter-spacing:.2px}
   .meta{color:var(--muted); font-size:.95rem}
 
-  /* TABS (scrollables, alto contraste) */
-  .tabs{display:flex; gap:.6rem; margin-top:.7rem; overflow-x:auto; padding:.2rem 0 .4rem;
+  /* TABS — pilas doradas elegantes */
+  .tabs{display:flex; gap:.6rem; margin-top:.7rem; overflow-x:auto; padding:.2rem 0 .5rem;
         -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity;}
   .tabs::-webkit-scrollbar{display:none}
   .tab{
-    scroll-snap-align:start; padding:.7rem 1.05rem; border-radius:var(--rx);
-    border:1px solid var(--hair); background:#171b23; color:var(--ink);
+    scroll-snap-align:start; padding:.7rem 1rem; border-radius:var(--rx);
+    border:1px solid var(--hair);
+    background: #161616; color:var(--ink);
     font:800 .98rem/1 inherit; min-height:44px; letter-spacing:.2px; touch-action:manipulation;
-    transition: background .15s ease, border-color .15s ease, transform .06s ease;
+    transition: background .15s ease, border-color .15s ease, transform .06s ease, color .15s ease;
   }
   .tab:active{ transform:scale(.98) }
-  .tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
-  .tab.active{ background:var(--accent); border-color:#1e40af; color:#fff }
+  .tab:focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
+  .tab.active{
+    background: color-mix(in oklab, var(--gold) 86%, #fff 0%);
+    color:#111; border-color:#9a7a18; box-shadow: 0 2px 0 #9a7a18 inset, 0 0 0 1px #0007 inset;
+  }
 
   /* PANEL + LISTA */
-  .panel{ background:var(--panel); border:1px solid var(--hair); border-radius:var(--r);
-          padding:calc(var(--pad) - .1rem); margin:0 clamp(.6rem, 2vw, 1rem); box-shadow:var(--shadow); }
-  .list{ display:flex; flex-direction:column; gap:.9rem }
+  .panel{
+    background: linear-gradient(180deg, color-mix(in oklab,var(--panel) 86%, transparent), var(--panel));
+    border:1px solid var(--hair); border-radius: var(--r); padding: calc(var(--pad) - .1rem);
+    margin: 0 clamp(.7rem, 2vw, 1rem);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  }
+  .list{ display:flex; flex-direction:column; gap:.95rem }
 
-  /* TARJETA */
+  /* TARJETAS con “glass oscuro” */
   .item{
     display:flex; justify-content:space-between; align-items:center; gap:1rem;
-    background:var(--card); border:1px solid var(--hair); border-radius:var(--r); padding:.95rem 1rem;
-    box-shadow:var(--shadow);
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
+    border:1px solid var(--hair); border-radius: var(--r); padding:1rem 1.05rem;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.05) inset,
+      0 10px 30px rgba(0,0,0,.55);
   }
-  .left{ display:flex; align-items:center; gap:.8rem; flex-wrap:wrap }
-  .date{ font:900 1rem/1.1 inherit; border-radius:.75rem; padding:.55rem .85rem; border:1px solid #2a3140; background:#10131a }
-  .time{ font:800 .96rem/1 inherit; border-radius:var(--rx); padding:.5rem .85rem; border:1px solid #2a3140; background:#171b23 }
 
-  /* CHIPS (sólidos y contrastados) */
-  .chip{ padding:.52rem .86rem; border-radius:var(--rx); font:800 .93rem/1 inherit; border:1px solid transparent; letter-spacing:.2px }
-  .chip.gray { background:#374151; color:#e5e7eb; border-color:#4b5563 }
-  .chip.green{ background:#16a34a; color:#fff;    border-color:#15803d }
-  .chip.gold { background:#3b82f6; color:#fff;    border-color:#2563eb } /* usamos azul como “alta demanda” */
-  .chip.warn { background:#f59e0b; color:#111;    border-color:#b45309 }
-  .chip.sold { background:#6b7280; color:#111;    border-color:#4b5563; text-decoration: line-through; text-decoration-thickness:2px }
+  .left{ display:flex; align-items:center; gap:.85rem; flex-wrap:wrap }
+  .date{
+    font:900 1.02rem/1.1 inherit; border-radius:.8rem; padding:.6rem .9rem;
+    color:#f3f3f3;
+    background: #0f0f0f; border:1px solid #2c2c2c;
+  }
+  .time{
+    font:800 .98rem/1 inherit; border-radius: var(--rx); padding:.55rem .9rem;
+    color:#f3f3f3;
+    background:#141414; border:1px solid #2c2c2c;
+  }
+
+  /* CHIPS legibles (sólidos) */
+  .chip{ padding:.56rem .92rem; border-radius:var(--rx); font:900 .94rem/1 inherit; border:1px solid transparent; letter-spacing:.2px }
+  .chip.gray { background:#2b2b2b; color:#fff;    border-color:#3a3a3a }
+  .chip.green{ background:var(--green); color:#0b1b0f; border-color:#15803d }
+  .chip.gold { background:var(--gold);  color:#161616; border-color:#9a7a18 }
+  .chip.warn { background:var(--orange); color:#1a1200; border-color:#b45309 }
+  .chip.sold { background:#4b5563; color:#0e0f12; border-color:#374151; text-decoration: line-through; text-decoration-thickness:2px }
 
   /* Medidor de ocupación (Escondido) */
-  .meter{ width:100%; height:8px; border-radius:6px; background:#0f131a; border:1px solid #2a3140; overflow:hidden; margin-top:.4rem }
-  .fill{ height:100%; width:0%; background:#3b82f6; transition:width .25s ease } /* azul accesible */
-  .meta2{ color:var(--muted); font:700 .86rem/1.2 system-ui; margin-top:.25rem }
+  .meter{ width:100%; height:8px; border-radius:6px; background:#0d0d0d; border:1px solid #2c2c2c; overflow:hidden; margin-top:.45rem }
+  .fill{ height:100%; width:0%; background: linear-gradient(90deg, #198754, var(--gold) 60%, #ffb300); transition:width .25s ease }
+  .meta2{ color:var(--muted); font:800 .86rem/1.2 system-ui; margin-top:.28rem }
 
-  /* Encabezado de mes sticky */
-  .month{ position:sticky; top:calc(56px + env(safe-area-inset-top));
-          margin:1rem 0 .5rem; padding:.25rem 0; font:900 .95rem/1.25 inherit;
-          color:var(--accent); background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.15) 100%); z-index:1 }
+  /* Encabezado de mes sticky en dorado */
+  .month{
+    position: sticky; top: calc(56px + env(safe-area-inset-top));
+    margin: 1rem 0 .6rem; padding:.25rem 0;
+    color: var(--gold);
+    font:900 .98rem/1.2 inherit; letter-spacing:.4px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.25) 100%);
+    z-index: 1;
+  }
 
   /* Móvil */
   @media (max-width: 520px){
-    .panel{ margin:0; padding:.85rem }
-    .item{ flex-direction:column; align-items:stretch; gap:.8rem }
+    .panel{ margin:0; padding:.9rem }
+    .item{ flex-direction:column; align-items:stretch; gap:.85rem }
     .left{ justify-content:space-between }
     .chip{ align-self:flex-end }
   }
@@ -132,7 +156,7 @@
       <div id="list" class="list"></div>
     </section>
   </main>
-<script id="PAYLOAD" type="application/json">{"generated_at": "2025-10-05T13:15:35.315187+02:00", "meta": {"source": "Dinaticket", "note": "Legible alto contraste; Escondido con capacidad/stock y % ocupación"}, "eventos": {"Disfruta": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["08 Oct 2025", "20:00 h", 0, "2025-10-08", 48, 48], ["15 Oct 2025", "20:00 h", 0, "2025-10-15", 48, 48], ["22 Oct 2025", "20:00 h", 0, "2025-10-22", 48, 48], ["05 Nov 2025", "20:00 h", 0, "2025-11-05", 48, 48], ["12 Nov 2025", "20:00 h", 0, "2025-11-12", 48, 48], ["19 Nov 2025", "20:00 h", 0, "2025-11-19", 48, 48], ["26 Nov 2025", "20:00 h", 0, "2025-11-26", 48, 48]]}}, "Miedo": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["10 Oct 2025", "23:00 h", 11, "2025-10-10", 48, 37], ["17 Oct 2025", "23:00 h", 6, "2025-10-17", 48, 42], ["07 Nov 2025", "23:00 h", 0, "2025-11-07", 48, 48], ["14 Nov 2025", "23:00 h", 0, "2025-11-14", 48, 48], ["21 Nov 2025", "23:00 h", 0, "2025-11-21", 48, 48]]}}, "Escondido": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["05 Oct 2025", "18:30 h", 4, "2025-10-05", 25, 21], ["11 Oct 2025", "20:00 h", 10, "2025-10-11", 60, 50], ["12 Oct 2025", "18:30 h", 0, "2025-10-12", 35, 35], ["19 Oct 2025", "18:30 h", 0, "2025-10-19", 35, 35], ["16 Nov 2025", "18:30 h", 0, "2025-11-16", 35, 35], ["23 Nov 2025", "18:30 h", 0, "2025-11-23", 35, 35], ["12 Dec 2025", "20:00 h", 0, "2025-12-12", 60, 60], ["14 Dec 2025", "18:30 h", 0, "2025-12-14", 60, 60], ["21 Dec 2025", "18:30 h", 0, "2025-12-21", 35, 35], ["28 Dec 2025", "18:30 h", 0, "2025-12-28", 35, 35]]}}}}</script>
+<script id="PAYLOAD" type="application/json">{"generated_at": "2025-10-05T13:22:27.227208+02:00", "meta": {"source": "Dinaticket", "note": "Legible alto contraste; Escondido con capacidad/stock y % ocupación"}, "eventos": {"Disfruta": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["08 Oct 2025", "20:00 h", 0, "2025-10-08", 48, 48], ["15 Oct 2025", "20:00 h", 0, "2025-10-15", 48, 48], ["22 Oct 2025", "20:00 h", 0, "2025-10-22", 48, 48], ["05 Nov 2025", "20:00 h", 0, "2025-11-05", 48, 48], ["12 Nov 2025", "20:00 h", 0, "2025-11-12", 48, 48], ["19 Nov 2025", "20:00 h", 0, "2025-11-19", 48, 48], ["26 Nov 2025", "20:00 h", 0, "2025-11-26", 48, 48]]}}, "Miedo": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["10 Oct 2025", "23:00 h", 11, "2025-10-10", 48, 37], ["17 Oct 2025", "23:00 h", 6, "2025-10-17", 48, 42], ["07 Nov 2025", "23:00 h", 0, "2025-11-07", 48, 48], ["14 Nov 2025", "23:00 h", 0, "2025-11-14", 48, 48], ["21 Nov 2025", "23:00 h", 0, "2025-11-21", 48, 48]]}}, "Escondido": {"table": {"headers": ["Fecha", "Hora", "Vendidas", "FechaISO", "Capacidad", "Stock"], "rows": [["05 Oct 2025", "18:30 h", 4, "2025-10-05", 25, 21], ["11 Oct 2025", "20:00 h", 10, "2025-10-11", 60, 50], ["12 Oct 2025", "18:30 h", 0, "2025-10-12", 35, 35], ["19 Oct 2025", "18:30 h", 0, "2025-10-19", 35, 35], ["16 Nov 2025", "18:30 h", 0, "2025-11-16", 35, 35], ["23 Nov 2025", "18:30 h", 0, "2025-11-23", 35, 35], ["12 Dec 2025", "20:00 h", 0, "2025-12-12", 60, 60], ["14 Dec 2025", "18:30 h", 0, "2025-12-14", 60, 60], ["21 Dec 2025", "18:30 h", 0, "2025-12-21", 35, 35], ["28 Dec 2025", "18:30 h", 0, "2025-12-28", 35, 35]]}}}}</script>
 <script>
 const payload = JSON.parse(document.getElementById('PAYLOAD').textContent);
 const eventos = payload.eventos || {};
@@ -183,12 +207,10 @@ function render(){
     }
 
     const fechaLabel=`${x.fecha_label} (${dayName(x.fecha_iso)})`;
-    // Chip básico por si no hay capacidad
     let totalClass="chip gray";
     if(x.vendidas>=1 && x.vendidas<=9) totalClass="chip green";
     if(x.vendidas>=10) totalClass="chip gold";
 
-    // Escondido: mostrar capacidad/stock + barra
     const isEscondido = (active === "Escondido");
     let rightHTML = `<span class="${totalClass}">Vendidas: <b>${x.vendidas}</b></span>`;
 
