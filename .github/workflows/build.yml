@@ -2,8 +2,9 @@ name: build-site
 
 on:
   schedule:
-    - cron: "0,29 * * * *"
-  workflow_dispatch:
+    - cron: '0,30 * * * *'  # cada 00 y 30 min de cada hora
+  workflow_dispatch:         # permite ejecutarlo manualmente
+
   push:
     branches: [main]
 
