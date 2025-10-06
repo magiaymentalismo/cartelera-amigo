@@ -36,8 +36,14 @@ TABS_HTML = r"""<!doctype html>
 <meta name="format-detection" content="telephone=no">
 <meta name="color-scheme" content="dark">
 <title>Cartelera — Magia & Teatro</title>
-<link rel="icon" type="image/png" href="./icons/favi.png">
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favi.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./icons/favi.png">
+<link rel="shortcut icon" href="./icons/favi.png">
+
+<!-- iOS / iPadOS (sin querystring) -->
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+
 <style>
   :root{
     /* Paleta teatral */
