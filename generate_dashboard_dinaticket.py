@@ -36,6 +36,7 @@ TABS_HTML = r"""<!doctype html>
 <meta name="format-detection" content="telephone=no">
 <meta name="color-scheme" content="dark">
 <title>Cartelera — Magia & Teatro</title>
+<link rel="icon" type="image/png" href="./icons/favi.png">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <style>
   :root{
