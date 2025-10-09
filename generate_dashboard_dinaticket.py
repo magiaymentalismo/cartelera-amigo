@@ -36,34 +36,20 @@ TABS_HTML = r"""<!doctype html>
 <meta name="format-detection" content="telephone=no">
 <meta name="color-scheme" content="dark">
 <title>Cartelera — Magia & Teatro</title>
+
 <!-- Favicons -->
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favi.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./icons/favi.png">
 <link rel="shortcut icon" href="./icons/favi.png">
-
-<!-- iOS / iPadOS (sin querystring) -->
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
 
 <style>
   :root{
-    /* Paleta teatral */
-    --bg:#000;          /* negro puro OLED */
-    --bg2:#090909;      /* negro suave */
-    --panel:#0d0d0d;    /* panel */
-    --card:#121212;     /* tarjetas */
-    --ink:#f7f7f7;      /* texto principal */
-    --muted:#b9b9b9;    /* texto secundario */
-    --hair:#272727;     /* bordes sutiles */
-    --gold:#d4af37;     /* dorado acento */
-    --green:#22c55e;    /* verde claro */
-    --orange:#f59e0b;   /* ámbar */
-    --sold:#6b7280;     /* gris sold-out */
-
-    --r:.9rem;          /* radio tarjetas */
-    --rx:999px;         /* radio pills */
-    --pad:1rem;
+    --bg:#000; --bg2:#090909; --panel:#0d0d0d; --card:#121212;
+    --ink:#f7f7f7; --muted:#b9b9b9; --hair:#272727;
+    --gold:#d4af37; --green:#22c55e; --orange:#f59e0b; --sold:#6b7280;
+    --r:.9rem; --rx:999px; --pad:1rem;
   }
-
   html,body{height:100%}
   body{
     margin:0; color:var(--ink);
@@ -76,8 +62,6 @@ TABS_HTML = r"""<!doctype html>
     min-height:100dvh; padding-bottom: env(safe-area-inset-bottom);
     overflow-y: overlay; -webkit-tap-highlight-color: transparent;
   }
-
-  /* Cabecera con “proscenio” */
   header{
     position:sticky; top:0; z-index:10; padding-top:max(.25rem, env(safe-area-inset-top));
     background:
@@ -86,92 +70,51 @@ TABS_HTML = r"""<!doctype html>
     border-bottom:1px solid var(--hair);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   }
-
   .wrap{max-width:1040px; margin:0 auto; padding: clamp(.85rem, 2vw, 1rem)}
   h1{margin:0 0 .35rem; font:900 clamp(19px, 3.2vw, 26px)/1.15 "SF Pro Display", system-ui, sans-serif; letter-spacing:.2px}
   .meta{color:var(--muted); font-size:.95rem}
-
-  /* TABS — pilas doradas elegantes */
   .tabs{display:flex; gap:.6rem; margin-top:.7rem; overflow-x:auto; padding:.2rem 0 .5rem;
         -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scroll-snap-type:x proximity;}
   .tabs::-webkit-scrollbar{display:none}
   .tab{
     scroll-snap-align:start; padding:.7rem 1rem; border-radius:var(--rx);
-    border:1px solid var(--hair);
-    background: #161616; color:var(--ink);
+    border:1px solid var(--hair); background:#161616; color:var(--ink);
     font:800 .98rem/1 inherit; min-height:44px; letter-spacing:.2px; touch-action:manipulation;
     transition: background .15s ease, border-color .15s ease, transform .06s ease, color .15s ease;
   }
   .tab:active{ transform:scale(.98) }
   .tab:focus-visible{ outline:2px solid var(--gold); outline-offset:2px }
-  .tab.active{
-    background: color-mix(in oklab, var(--gold) 86%, #fff 0%);
-    color:#111; border-color:#9a7a18; box-shadow: 0 2px 0 #9a7a18 inset, 0 0 0 1px #0007 inset;
-  }
-
-  /* PANEL + LISTA */
-  .panel{
-    background: linear-gradient(180deg, color-mix(in oklab,var(--panel) 86%, transparent), var(--panel));
-    border:1px solid var(--hair); border-radius: var(--r); padding: calc(var(--pad) - .1rem);
-    margin: 0 clamp(.7rem, 2vw, 1rem);
-    box-shadow: 0 30px 80px rgba(0,0,0,.5);
-  }
+  .tab.active{ background: color-mix(in oklab, var(--gold) 86%, #fff 0%); color:#111; border-color:#9a7a18; box-shadow: 0 2px 0 #9a7a18 inset, 0 0 0 1px #0007 inset; }
+  .panel{ background: linear-gradient(180deg, color-mix(in oklab,var(--panel) 86%, transparent), var(--panel));
+          border:1px solid var(--hair); border-radius: var(--r); padding: calc(var(--pad) - .1rem);
+          margin: 0 clamp(.7rem, 2vw, 1rem); box-shadow: 0 30px 80px rgba(0,0,0,.5); }
   .list{ display:flex; flex-direction:column; gap:.95rem }
-
-  /* TARJETAS con “glass oscuro” */
-  .item{
-    display:flex; justify-content:space-between; align-items:center; gap:1rem;
-    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
-    border:1px solid var(--hair); border-radius: var(--r); padding:1rem 1.05rem;
-    box-shadow:
-      0 1px 0 rgba(255,255,255,.05) inset,
-      0 10px 30px rgba(0,0,0,.55);
-  }
-
+  .item{ display:flex; justify-content:space-between; align-items:center; gap:1rem;
+         background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
+         border:1px solid var(--hair); border-radius: var(--r); padding:1rem 1.05rem;
+         box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 10px 30px rgba(0,0,0,.55); }
   .left{ display:flex; align-items:center; gap:.85rem; flex-wrap:wrap }
-  .date{
-    font:900 1.02rem/1.1 inherit; border-radius:.8rem; padding:.6rem .9rem;
-    color:#f3f3f3;
-    background: #0f0f0f; border:1px solid #2c2c2c;
-  }
-  .time{
-    font:800 .98rem/1 inherit; border-radius: var(--rx); padding:.55rem .9rem;
-    color:#f3f3f3;
-    background:#141414; border:1px solid #2c2c2c;
-  }
-
-  /* CHIPS legibles (sólidos) */
+  .date{ font:900 1.02rem/1.1 inherit; border-radius:.8rem; padding:.6rem .9rem; color:#f3f3f3; background:#0f0f0f; border:1px solid #2c2c2c; }
+  .time{ font:800 .98rem/1 inherit; border-radius: var(--rx); padding:.55rem .9rem; color:#f3f3f3; background:#141414; border:1px solid #2c2c2c; }
   .chip{ padding:.56rem .92rem; border-radius:var(--rx); font:900 .94rem/1 inherit; border:1px solid transparent; letter-spacing:.2px }
-  .chip.gray { background:#2b2b2b; color:#fff;    border-color:#3a3a3a }
+  .chip.gray { background:#2b2b2b; color:#fff; border-color:#3a3a3a }
   .chip.green{ background:var(--green); color:#0b1b0f; border-color:#15803d }
   .chip.gold { background:var(--gold);  color:#161616; border-color:#9a7a18 }
   .chip.warn { background:var(--orange); color:#1a1200; border-color:#b45309 }
   .chip.sold { background:#4b5563; color:#0e0f12; border-color:#374151; text-decoration: line-through; text-decoration-thickness:2px }
-
-  /* Medidor de ocupación (Escondido) */
   .meter{ width:100%; height:8px; border-radius:6px; background:#0d0d0d; border:1px solid #2c2c2c; overflow:hidden; margin-top:.45rem }
   .fill{ height:100%; width:0%; background: linear-gradient(90deg, #198754, var(--gold) 60%, #ffb300); transition:width .25s ease }
   .meta2{ color:var(--muted); font:800 .86rem/1.2 system-ui; margin-top:.28rem }
-
-  /* Encabezado de mes sticky en dorado */
-  .month{
-    position: sticky; top: calc(56px + env(safe-area-inset-top));
-    margin: 1rem 0 .6rem; padding:.25rem 0;
-    color: var(--gold);
-    font:900 .98rem/1.2 inherit; letter-spacing:.4px;
-    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.25) 100%);
-    z-index: 1;
-  }
-
-  /* Móvil */
+  .month{ position: sticky; top: calc(56px + env(safe-area-inset-top));
+          margin: 1rem 0 .6rem; padding:.25rem 0; color: var(--gold);
+          font:900 .98rem/1.2 inherit; letter-spacing:.4px;
+          background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.25) 100%); z-index: 1; }
   @media (max-width: 520px){
     .panel{ margin:0; padding:.9rem }
     .item{ flex-direction:column; align-items:stretch; gap:.85rem }
     .left{ justify-content:space-between }
     .chip{ align-self:flex-end }
   }
-
-  /* Accesibilidad */
   @media (prefers-reduced-motion: reduce){
     *{scroll-behavior:auto; transition:none !important; animation:none !important}
   }
@@ -282,7 +225,6 @@ if(active) render();
 </script>
 </body>
 </html>"""
-
 
 # ================== SCRAPER ================== #
 def fetch_functions_dinaticket(url: str, timeout: int = 20) -> list[dict]:

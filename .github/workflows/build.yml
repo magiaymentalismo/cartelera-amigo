@@ -2,8 +2,12 @@ name: build-site
 
 on:
   schedule:
-    - cron: "*/30 * * * *"     # cada 30 min en UTC → también :00 y :30 en Madrid
-  workflow_dispatch: {}        # para correrlo manualmente
+    - cron: "*/30 * * * *"   # cada 30 min
+  workflow_dispatch: {}      # ejecutar manual
+
+concurrency:
+  group: build-site
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -11,6 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -37,7 +42,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # fuerza agregar aunque esté en .gitignore
           git add -f docs/index.html
           if git diff --cached --quiet; then
             echo "No changes, nothing to commit."
