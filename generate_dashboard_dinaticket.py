@@ -11,9 +11,7 @@ from bs4 import BeautifulSoup
 
 # ===================== CONFIG ===================== #
 EVENTS = {
-    "Disfruta": "https://www.dinaticket.com/es/provider/10402/event/4905281",
-    "Miedo": "https://www.dinaticket.com/es/provider/10402/event/4915778",
-    "Escondido": "https://www.dinaticket.com/es/provider/20073/event/4930233",
+    "Disfruta": "https://www.dinaticket.com/es/provider/20073/event/4919204"
 }
 
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X) "
